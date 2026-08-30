@@ -249,7 +249,7 @@ body {
 
   body {
     overflow-x: hidden;
-    width: 480px;
+    width: 100%;
   }
 
   header {
@@ -265,7 +265,7 @@ body {
   }
 
   .searchbar {
-    width: 480px;
+    width: calc(100% - 20px);
   }
 
   .search-container {
@@ -281,7 +281,7 @@ body {
   }
 
   #gallery {
-    width: 480px;
+    width: 100%;
     display: grid;
     grid-template-columns: 1fr;
     justify-items: center;
