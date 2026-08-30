@@ -569,7 +569,7 @@ sendButton.addEventListener(
             } =
                 supabaseClient
                     .storage
-                    .from("artworks")
+                    .from("drawings")
                     .getPublicUrl(
                         fileName
                     );
