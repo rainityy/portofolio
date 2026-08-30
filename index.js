@@ -570,9 +570,7 @@ sendButton.addEventListener(
                 supabaseClient
                     .storage
                     .from("drawings")
-                    .getPublicUrl(
-                        fileName
-                    );
+                    .getPublicUrl(fileName);
 
 
             const imageUrl =
