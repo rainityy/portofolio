@@ -5,3 +5,22 @@ create table public.messages (
     image_url text not null,
     created_at timestamptz default now()
 );
+
+alter table public.messages enable row level security;
+
+grant select, insert on public.messages to anon;
+
+create policy "Anyone can read messages"
+on public.messages
+for select
+to anon
+using (true);
+
+create policy "Anyone can send messages"
+on public.messages
+for insert
+to anon
+with check (
+    char_length(name) between 1 and 100
+    and char_length(message) between 1 and 5000
+);
