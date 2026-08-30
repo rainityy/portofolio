@@ -6,42 +6,31 @@ const canvas = document.getElementById("drawing-board");
 const toolbar = document.getElementById("toolbar");
 const ctx = canvas.getContext("2d");
 
-
 // ====================
 // VARIABLES
 // ====================
 
 let isPainting = false;
-
 let lineWidth = 5;
 let eraserSize = 30;
-
 let currentMode = "draw";
-
 let backgroundImage = null;
-
 
 // ====================
 // INPUT ELEMENTS
 // ====================
 
-const strokeInput =
-    document.getElementById("stroke");
+const strokeInput = document.getElementById("stroke");
 
-const lineWidthInput =
-    document.getElementById("lineWidth");
+const lineWidthInput = document.getElementById("lineWidth");
 
-const eraserSizeInput =
-    document.getElementById("eraserSize");
+const eraserSizeInput = document.getElementById("eraserSize");
 
-const drawModeButton =
-    document.getElementById("drawMode");
+const drawModeButton = document.getElementById("drawMode");
 
-const eraserModeButton =
-    document.getElementById("eraserMode");
+const eraserModeButton = document.getElementById("eraserMode");
 
-const clearButton =
-    document.getElementById("clear");
+const clearButton = document.getElementById("clear");
 
 
 // ====================
@@ -341,26 +330,13 @@ function drawBackgroundImage(img) {
     ctx.globalCompositeOperation =
         "source-over";
 
-    const hRatio =
-        canvas.width / img.width;
-
-    const vRatio =
-        canvas.height / img.height;
-
-    const ratio =
-        Math.min(hRatio, vRatio);
-
-    const newWidth =
-        img.width * ratio;
-
-    const newHeight =
-        img.height * ratio;
-
-    const x =
-        (canvas.width - newWidth) / 2;
-
-    const y =
-        (canvas.height - newHeight) / 2;
+    const hRatio = canvas.width / img.width;
+    const vRatio = canvas.height / img.height;
+    const ratio = Math.min(hRatio, vRatio);
+    const newWidth = img.width * ratio;
+    const newHeight = img.height * ratio;
+    const x = (canvas.width - newWidth) / 2;
+    const y = (canvas.height - newHeight) / 2;
 
     ctx.drawImage(
         img,
@@ -377,14 +353,9 @@ function drawBackgroundImage(img) {
 // UPLOAD MODAL
 // ====================
 
-const modal =
-    document.getElementById("myModal");
-
-const uploadButton =
-    document.getElementById("myBtn");
-
-const closeButton =
-    document.getElementsByClassName("close")[0];
+const modal = document.getElementById("myModal");
+const uploadButton = document.getElementById("myBtn");
+const closeButton = document.getElementsByClassName("close")[0];
 
 
 uploadButton.onclick = function () {
@@ -416,12 +387,8 @@ window.addEventListener("click", (event) => {
 // IMAGE UPLOAD
 // ====================
 
-const imageForm =
-    document.getElementById("imageForm");
-
-const imageInput =
-    document.getElementById("imageInput");
-
+const imageForm = document.getElementById("imageForm");
+const imageInput = document.getElementById("imageInput");
 
 imageForm.addEventListener("submit", (e) => {
 
@@ -487,75 +454,195 @@ imageForm.addEventListener("submit", (e) => {
 
 const SUPABASE_URL = "https://oxtwjdjlnkkcdsfdotsc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_q3F4rMaQP0dy9wJ4dmX_fg_Sj3tNZcX";
-
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
 
-const sendButton =
-    document.getElementById("send");
+
+const sendButton = document.getElementById("send");
+
+sendButton.addEventListener(
+    "click",
+    async () => {
+
+        const name =
+            document
+                .getElementById("name")
+                .value
+                .trim();
+
+        const message =
+            document
+                .querySelector("textarea")
+                .value
+                .trim();
+
+        // ====================
+        // VALIDATION
+        // ====================
+
+        if (!name) {
+            alert("Insert your Muse.");
+            return;
+        }
+
+        if (!message) {
+            alert("Insert your messages.");
+            return;
+        }
+
+        try {
+
+            // ====================
+            // CANVAS → PNG
+            // ====================
+
+            const imageBlob = await new Promise((resolve) => {
+                    canvas.toBlob(
+                        resolve,
+                        "image/png"
+                    );
+                });
+
+            if (!imageBlob) {
+                alert(
+                    "Artwork failed to make."
+                );
+                return;
+            }
 
 
-sendButton.addEventListener("click", async () => {
+            // ====================
+            // FILE NAME
+            // ====================
 
-    const name =
-        document
-            .getElementById("name")
-            .value
-            .trim();
+            const fileName =
+                `${Date.now()}-${crypto.randomUUID()}.png`;
 
-    const message =
-        document
-            .querySelector("textarea")
-            .value
-            .trim();
+            // ====================
+            // UPLOAD IMAGE
+            // SUPABASE STORAGE
+            // ====================
+
+            const {
+                error: uploadError
+            } =
+                await supabaseClient
+                    .storage
+                    .from("drawings")
+                    .upload(
+                        fileName,
+                        imageBlob,
+                        {
+                            contentType:
+                                "image/png",
+
+                            upsert:
+                                false
+                        }
+                    );
+
+            if (uploadError) {
+
+                console.error(
+                    "Upload error:",
+                    uploadError
+                );
+
+                alert(
+                    "Art failed to upload."
+                );
+
+                return;
+            }
 
 
-    if (!name) {
+            // ====================
+            // GET IMAGE URL
+            // ====================
 
-        alert("Masukkan nama.");
+            const {
+                data: publicUrlData
+            } =
+                supabaseClient
+                    .storage
+                    .from("artworks")
+                    .getPublicUrl(
+                        fileName
+                    );
 
-        return;
+
+            const imageUrl =
+                publicUrlData.publicUrl;
+
+
+            // ====================
+            // SAVE MESSAGE
+            // SUPABASE DATABASE
+            // ====================
+
+            const {
+                error: insertError
+            } =
+                await supabaseClient
+                    .from("messages")
+                    .insert({
+
+                        name:
+                            name,
+
+                        message:
+                            message,
+
+                        image_url:
+                            imageUrl
+
+                    });
+
+
+            if (insertError) {
+
+                console.error(
+                    "Database error:",
+                    insertError
+                );
+
+                alert(
+                    "Message failed to save."
+                );
+
+                return;
+            }
+
+
+            // ====================
+            // SUCCESS
+            // ====================
+
+            alert(
+                "Your message successfully sent!"
+            );
+
+
+            window.location.href =
+                "gallery.html";
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Unexpected error:",
+                error
+            );
+
+            alert(
+                "Unexpected error when sending the message."
+            );
+
+        }
+
     }
-
-
-    if (!message) {
-
-        alert("Masukkan pesan.");
-
-        return;
-    }
-
-
-    const image =
-        canvas.toDataURL("image/png");
-
-
-    const { error } =
-        await supabaseClient
-            .from("messages")
-            .insert({
-                name: name,
-                message: message,
-                image: image
-            });
-
-
-    if (error) {
-
-        console.error(error);
-
-        alert("Pesan gagal dikirim.");
-
-        return;
-    }
-
-
-    alert("Pesan berhasil dikirim!");
-
-    window.location.href =
-        "gallery.html";
-
-});
+);
