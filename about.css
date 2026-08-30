@@ -73,7 +73,7 @@ code {
     
     body {
         overflow-x: hidden;
-        width: 480px;
+        width: 100%;
     }
 
     header {
@@ -89,12 +89,13 @@ code {
     }
 
     .title {
-        width: 480px;
+        width: 100%;
+        max-width: 480px;
         margin: auto;
     }
     
     #about {
-        width: 460px;
+        width: calc(100% - 20px);
         margin: auto;
         padding: 10px;
     }
