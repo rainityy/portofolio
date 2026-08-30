@@ -24,3 +24,22 @@ with check (
     char_length(name) between 1 and 100
     and char_length(message) between 1 and 5000
 );
+
+create policy "Anyone can upload drawings"
+on storage.objects
+for insert
+to anon
+with check (
+    bucket_id = 'drawings'
+);
+
+create policy "Anyone can view drawings"
+on storage.objects
+for select
+to anon
+using (
+    bucket_id = 'drawings'
+);
+
+alter publication supabase_realtime
+add table public.messages;
