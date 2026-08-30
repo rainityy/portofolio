@@ -319,8 +319,8 @@ textarea {
     }
 
     .name label {
-        font-size: 20px;
-        margin: 0 10px;
+        font-size: 16px;
+        margin: auto 10px;
     }
 
     .container {
@@ -367,7 +367,8 @@ textarea {
     }
 
     .clear-button {
-        width: 100%;
+        width: 50% !important;
+        margin: 3px 10px 0;
     }
 
     .drawing-board {
@@ -403,6 +404,8 @@ textarea {
 
     button {
         min-height: 38px;
+        width: 76% !important;
+        margin: 2px 10px !important;
     }
 
 }    
