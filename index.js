@@ -32,6 +32,17 @@ const eraserModeButton = document.getElementById("eraserMode");
 
 const clearButton = document.getElementById("clear");
 
+// ====================
+// SUPABASE
+// ====================
+
+const SUPABASE_URL = "https://oxtwjdjlnkkcdsfdotsc.supabase.co";
+const SUPABASE_KEY = "sb_publishable_q3F4rMaQP0dy9wJ4dmX_fg_Sj3tNZcX";
+const supabaseClient =
+    window.supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
 
 // ====================
 // CANVAS SIZE
@@ -447,19 +458,9 @@ imageForm.addEventListener("submit", (e) => {
 
 });
 
-
 // ====================
 // SEND TO GALLERY
 // ====================
-
-const SUPABASE_URL = "https://oxtwjdjlnkkcdsfdotsc.supabase.co";
-const SUPABASE_KEY = "sb_publishable_q3F4rMaQP0dy9wJ4dmX_fg_Sj3tNZcX";
-const supabaseClient =
-    window.supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
 
 const sendButton = document.getElementById("send");
 
