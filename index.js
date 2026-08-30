@@ -603,16 +603,14 @@ sendButton.addEventListener(
 
             if (insertError) {
 
-                console.error(
-                    "Database error:",
-                    insertError
-                );
+        console.error("DATABASE ERROR:", insertError);
 
-                alert(
-                    "Message failed to save."
-                );
+            alert(
+                "Message failed to save:\n" +
+                insertError.message
+            );
 
-                return;
+            return;
             }
 
 
