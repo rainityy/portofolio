@@ -384,7 +384,7 @@ textarea {
     }
 
     .message {
-        width: 100%;
+        width: calc(100% - 24px);
         max-width: 456px;
         border: 2px solid;
         border-top: none;
