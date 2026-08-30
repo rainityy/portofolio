@@ -1,23 +1,41 @@
 const gallery = document.getElementById("gallery");
 const searchInput = document.getElementById("searchInput");
-
 const messageModal = document.getElementById("messageModal");
 const modalImage = document.getElementById("modalImage");
 const modalName = document.getElementById("modalName");
 const modalMessage = document.getElementById("modalMessage");
 const closeModal = document.getElementById("closeModal");
 
+// ====================
+// SUPABASE
+// ====================
+
 const SUPABASE_URL = "https://oxtwjdjlnkkcdsfdotsc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_q3F4rMaQP0dy9wJ4dmX_fg_Sj3tNZcX";
-
 const supabaseClient =
     window.supabase.createClient(
         SUPABASE_URL,
         SUPABASE_KEY
     );
 
+// ====================
+// DATA
+// ====================
+
+let galleryData = [];
+
+// ====================
+// LOAD GALLERY
+// ====================
 
 async function loadGallery() {
+
+    gallery.innerHTML = `
+        <p class="no-result">
+            Loading messages...
+        </p>
+    `;
+
 
     const { data, error } =
         await supabaseClient
@@ -30,20 +48,26 @@ async function loadGallery() {
 
     if (error) {
 
-        console.error(error);
+        console.error(
+            "Error loading messages:",
+            error
+        );
 
-        gallery.innerHTML =
-            "<p>Failed to load messages.</p>";
+        gallery.innerHTML = `
+            <p class="no-result">
+                Failed to load messages.
+            </p>
+        `;
 
         return;
     }
 
 
-    displayGallery(data);
+    galleryData = data || [];
 
+    displayGallery(galleryData);
 }
 
-loadGallery();
 
 // ====================
 // DISPLAY GALLERY
@@ -53,7 +77,8 @@ function displayGallery(data) {
 
     gallery.innerHTML = "";
 
-    if (data.length === 0) {
+
+    if (!data || data.length === 0) {
 
         gallery.innerHTML = `
             <p class="no-result">
@@ -64,46 +89,65 @@ function displayGallery(data) {
         return;
     }
 
-    data.forEach((item, index) => {
 
-        const figure = document.createElement("figure");
+    data.forEach((item) => {
 
-        figure.className = "gallery-item";
+        const figure =
+            document.createElement("figure");
+
+        figure.className =
+            "gallery-item";
+
 
         figure.innerHTML = `
 
             <img
-                src="${item.image}"
+                src="${item.image_url}"
                 alt="${item.name}"
             >
 
             <figcaption>
 
-                <h3>${item.name}</h3>
+                <h3>
+                    ${item.name}
+                </h3>
 
-                <p>${item.message}</p>
+                <p>
+                    ${item.message}
+                </p>
 
             </figcaption>
 
         `;
 
+
         // ====================
         // OPEN POPUP
         // ====================
 
-        figure.addEventListener("click", () => {
+        figure.addEventListener(
+            "click",
+            () => {
 
-            modalImage.src = item.image;
+                modalImage.src =
+                    item.image_url;
 
-            modalImage.alt = item.name;
+                modalImage.alt =
+                    item.name;
 
-            modalName.textContent = item.name;
+                modalName.textContent =
+                    item.name;
 
-            modalMessage.textContent = item.message;
+                modalMessage.textContent =
+                    item.message;
 
-            messageModal.classList.add("show");
+                messageModal.classList.add(
+                    "show"
+                );
 
-        });
+            }
+        );
+
 
         gallery.appendChild(figure);
 
@@ -116,93 +160,177 @@ function displayGallery(data) {
 // SEARCH
 // ====================
 
-searchInput.addEventListener("input", async () => {
+searchInput.addEventListener(
+    "input",
+    () => {
+
+        filterGallery();
+
+    }
+);
+
+
+function filterGallery() {
 
     const keyword =
-        searchInput.value.trim();
+        searchInput.value
+            .trim()
+            .toLowerCase();
 
 
-    let query =
-        supabaseClient
-            .from("messages")
-            .select("*")
-            .order("created_at", {
-                ascending: false
-            });
+    // Tidak ada keyword
+    if (!keyword) {
 
-
-    if (keyword) {
-
-        query =
-            query.ilike(
-                "name",
-                `%${keyword}%`
-            );
-
-    }
-
-
-    const { data, error } =
-        await query;
-
-
-    if (error) {
-
-        console.error(error);
+        displayGallery(
+            galleryData
+        );
 
         return;
+
     }
 
 
-    displayGallery(data);
+    // Cari berdasarkan nama
+    const filteredData =
+        galleryData.filter(
+            (item) => {
 
-});
+                return (
+                    item.name || ""
+                )
+                    .toLowerCase()
+                    .includes(keyword);
+
+            }
+        );
+
+
+    displayGallery(
+        filteredData
+    );
+
+}
 
 
 // ====================
 // CLOSE MODAL
 // ====================
 
-closeModal.addEventListener("click", () => {
+closeModal.addEventListener(
+    "click",
+    () => {
 
-    messageModal.classList.remove("show");
-
-});
-
-
-// Klik area luar popup untuk menutup
-
-messageModal.addEventListener("click", (e) => {
-
-    if (e.target === messageModal) {
-
-        messageModal.classList.remove("show");
+        messageModal.classList.remove(
+            "show"
+        );
 
     }
+);
 
-});
 
+// Klik luar popup
+messageModal.addEventListener(
+    "click",
+    (e) => {
 
-// ====================
-// INITIAL DISPLAY
-// ====================
+        if (
+            e.target === messageModal
+        ) {
 
-supabaseClient
-    .channel("messages-channel")
-    .on(
-        "postgres_changes",
-        {
-            event: "INSERT",
-            schema: "public",
-            table: "messages"
-        },
-        (payload) => {
-
-            displayGallery([
-                payload.new,
-                ...currentGalleryData
-            ]);
+            messageModal.classList.remove(
+                "show"
+            );
 
         }
-    )
-    .subscribe();
+
+    }
+);
+
+
+// ESC untuk menutup popup
+document.addEventListener(
+    "keydown",
+    (e) => {
+
+        if (e.key === "Escape") {
+
+            messageModal.classList.remove(
+                "show"
+            );
+
+        }
+
+    }
+);
+
+
+// ====================
+// REALTIME
+// ====================
+
+function subscribeToNewMessages() {
+
+    supabaseClient
+        .channel("messages-realtime")
+
+        .on(
+            "postgres_changes",
+            {
+                event: "INSERT",
+                schema: "public",
+                table: "messages"
+            },
+
+            (payload) => {
+
+                const newMessage =
+                    payload.new;
+
+
+                // Cegah duplikat
+                const alreadyExists =
+                    galleryData.some(
+                        (item) =>
+                            item.id ===
+                            newMessage.id
+                    );
+
+
+                if (alreadyExists) {
+                    return;
+                }
+
+
+                // Tambahkan pesan baru
+                galleryData.unshift(
+                    newMessage
+                );
+
+
+                // Tampilkan kembali
+                // dengan mempertahankan search
+                filterGallery();
+
+            }
+        )
+
+        .subscribe(
+            (status) => {
+
+                console.log(
+                    "Realtime status:",
+                    status
+                );
+            }
+        );
+
+}
+
+
+// ====================
+// START
+// ====================
+
+loadGallery();
+
+subscribeToNewMessages();
