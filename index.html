@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@400..700&family=Momo+Signature&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
+    <title>The Anonymuse</title>
+</head>
+
+<body>
+    <div id="wrapper">
+        <div id="navbar">
+            <a href="about.html">About</a>
+            <a href="gallery.html">Gallery</a>
+            <a href="index.html">Home</a>
+        </div>
+        <img class="title" src="img/title.png">
+        <div class="name">
+            <label for="name">The Muse:</label>
+            <input type="text" id="name" name="name">
+        </div>
+        <section class="container">
+            <div id="toolbar">
+                <div class="tool-section">
+                    <span class="tool-title">Tool</span>
+                    <div class="tool-modes">
+                        <button id="drawMode" class="tool-button active" type="button">
+                            Draw
+                        </button>
+                        <button id="eraserMode" class="tool-button" type="button">
+                            Eraser
+                        </button>
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <label for="stroke">Color</label>
+                    <input id="stroke" name="stroke" type="color" value="#000000">
+                </div>
+                <div class="tool-section">
+                    <label for="lineWidth">Stroke Width</label>
+                    <div class="number-input">
+                        <input id="lineWidth" name="lineWidth" type="number" min="1" max="100" value="5">
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <label for="eraserSize">Eraser Size</label>
+                    <div class="number-input">
+                        <input id="eraserSize" type="number" min="1" max="100" value="30">
+                    </div>
+                </div>
+                <div class="tool-section">
+                    <button id="clear" class="clear-button" type="button">
+                        Clear
+                    </button>
+                </div>
+            </div>
+            <div class="drawing-board">
+                <canvas id="drawing-board"></canvas>
+            </div>
+        </section>
+        <div class="message">
+            <label class="text" for="textarea">Message</label>
+            <textarea></textarea>
+        </div>
+        <div class="button">
+            <button id="myBtn">Upload</button>
+            <div id="myModal" class="modal">
+                <div class="modal-content">
+                    <span class="close">&times;</span>
+                    <p>Click on the "Choose File" button to upload your art:</p>
+                    <form id="imageForm">
+                        <input type="file" id="imageInput" accept="image/*">
+                        <button type="submit">Submit</button>
+                    </form>
+                </div>
+            </div>
+            <button id="send">Send</button>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="index.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,353 @@
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #fffceb;
+    font-family: "Momo Signature", cursive;
+}
+
+#wrapper {
+    width: 100%;
+}
+
+#navbar {
+    position: relative;
+    z-index: 10;
+    overflow: hidden;
+    background-color: #f4eee0;
+    padding-right: 100px;
+    border-bottom: 3px solid #323131;
+}
+
+#navbar a {
+    float: right;
+    display: block;
+    color: #323131;
+    text-align: center;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 25px;
+}
+
+#navbar a:hover {
+    background-color: #c5bebe;
+    color: #323131;
+}
+
+#navbar a.active {
+    background-color: #c5bebe;
+    color: #323131;
+}
+
+#background {
+  height: auto;
+  width: 100%;
+  background-image: url(http://garchitecture.ca/php/images/headers/wood.jpg);
+  padding-top: 20px;
+  font-family: "Cedarville Cursive", cursive;
+}
+
+#gallery {
+  width: 900px;
+  margin: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, 267px);
+  gap: 25px;
+  padding: 30px;
+}
+
+.gallery-item{
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 5px 15px rgba(0,0,0,.2);
+  width: 267px;
+  height: 306px;
+  margin: 0;
+  background-color: white;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  box-sizing: border-box;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.gallery-item img{
+  height: 154px;
+  width: 246px;
+  display: block;
+  object-fit: cover;
+}
+
+.gallery-item:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.gallery-item figcaption{
+  padding: 15px;
+  height: 106px;
+  box-sizing: border-box;
+  padding: 12px 15px;
+  overflow: hidden;
+}
+
+.gallery-item h2{
+  margin: 0 0 7px;
+  font-size: 18px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.gallery-item p{
+  word-break: break-word;
+  margin: 0;
+  font-size: 14px;
+  line-height: 1.15;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+#background img {
+  margin: 0px;
+}
+
+#background figure {
+  float: left;
+  position: relative;
+  background-color: white;
+  text-align: center;
+  font-size: 15px;
+  padding: 10px;
+  margin: 10px;
+  box-shadow: 1px 2px 3px #323131;
+}
+
+#background figure:hover {
+  box-shadow: 5px 10px 100px #323131;
+  -webkit-transform: scale(1.1,1.1);
+  z-index: 20;
+}
+
+.searchbar {
+  width: 990px;
+  display: flex;
+  justify-content: center;
+  margin: 50px auto 0;
+}
+
+#searchInput {
+  width: 350px;
+  max-width: 90%;
+  padding: 12px 18px;
+  border: 2px solid #323131;
+  border-radius: 10px;
+  outline: none;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+#searchInput:focus {
+  border-color: black;
+  box-shadow: 0 0 8px #323131;
+}
+
+.message-modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  z-index: 9999;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.message-modal.show {
+  display: flex;
+}
+
+.modal-content {
+  position: relative;
+  width: 90%;
+  max-width: 700px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-sizing: border-box;
+  animation: popup 0.2s ease;
+  flex-direction: column;
+  align-content: center;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  display: flex;
+}
+
+@keyframes popup {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+#modalImage {
+  display: block;
+  width: 75%;
+  max-height: 500px;
+  object-fit: contain;
+  margin: 0 auto 20px;
+}
+
+.modal-info h2 {
+  margin: 0 0 10px;
+  font-size: 24px;
+  text-align: center;
+}
+
+.modal-info p {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.7;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  text-align: center;
+}
+
+.close-modal {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 35px;
+  height: 35px;
+  border: none;
+  border-radius: 50%;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 25px;
+  line-height: 30px;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.close-modal:hover {
+    background-color: black;
+}
+
+@media screen and (max-width: 480px) {
+
+  body {
+    overflow-x: hidden;
+    width: 480px;
+  }
+
+  header {
+    padding: 10px 15px;
+  }
+
+  nav {
+    width: 100%;
+  }
+
+  #navbar a {
+    font-size: 15px;
+  }
+
+  .searchbar {
+    width: 480px;
+  }
+
+  .search-container {
+    width: 100%;
+    padding: 15px;
+    box-sizing: border-box;
+  }
+
+  #searchInput {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 14px;
+  }
+
+  #gallery {
+    width: 480px;
+    display: grid;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 20px;
+    padding: 0;
+  }
+
+  .gallery-item {
+    width: 100%;
+    max-width: 267px;
+    height: 306px;
+  }
+
+  .gallery-item img {
+    height: 154px;
+    width: 246px;
+  }
+
+  .gallery-item figcaption {
+    height: 106px;
+    padding: 10px 12px;
+  }
+
+  .gallery-item h3 {
+    font-size: 16px;
+  }
+
+  .gallery-item p {
+    font-size: 13px;
+    -webkit-line-clamp: 3;
+  }
+
+  .message-modal {
+    max-width: 480px;
+  }
+
+  .modal-content {
+    width: 420px;
+    max-width: 100%;
+    max-height: 100%;
+    padding: 15px;
+    border-radius: 8px;
+  }
+
+  #modalImage {
+    width: 100%;
+    max-height: 300px;
+    margin-bottom: 15px;
+  }
+
+  .modal-infoh h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .modal-info p {
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  .close-modal {
+    width: 32px;
+    height: 32px;
+    top: 8px;
+    right: 8px;
+    font-size: 22px;
+  }
+}
+  
